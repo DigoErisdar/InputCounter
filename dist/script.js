@@ -3,8 +3,8 @@ class InputCounter {
         this.counter = counter;
         const input = this.counter.querySelector('.input-counter-input');
         this.options = {
-            min: parseFloat(input.dataset.min) || 1,
-            max: parseFloat(input.dataset.max) || 999,
+            min: parseFloat(input.dataset.min) || null,
+            max: parseFloat(input.dataset.max) || null,
         };
         this.event_name = 'input_change';
         this.event = new CustomEvent(this.event_name);
@@ -69,8 +69,8 @@ class InputCounter {
         let value = parseFloat(input.value);
         if (plus) plus.classList.remove('active');
         if (minus) minus.classList.remove('active');
-        if (value > min) minus.classList.add('active');
-        if (value < max) plus.classList.add('active');
+        if (value > min || min === null) minus.classList.add('active');
+        if (value < max || max === null) plus.classList.add('active');
     }
 
     calculate = event => {
@@ -81,18 +81,18 @@ class InputCounter {
         const min = this.options.min;
         let action = event.detail;
         let value = parseFloat(input.value);
-        if (action === '+' && value + 1 <= max) {
-            input.value = parseFloat(value) + 1;
+        if (action === '+' && (max === null || value + 1 <= max)) {
+            input.value = value + 1;
         }
-        if (action === '-' && value - 1 >= min) {
-            input.value = parseFloat(value) - 1;
+        if (action === '-' && (min === null || value - 1 >= min)) {
+            input.value = value - 1;
         }
 
         if (!action) {
-            if (value > max) {
+            if (max !== null && value > max) {
                 input.value = max;
             }
-            if (value < min) {
+            if (min !== null && value < min) {
                 input.value = min;
             }
         }
