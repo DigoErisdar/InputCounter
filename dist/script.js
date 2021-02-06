@@ -50,8 +50,12 @@ class InputCounter {
                 parent.dispatchEvent(this.event);
             })
             item.addEventListener('keydown', event => {
-                console.log(event)
-                if (event.keyCode === 13) event.preventDefault();
+                if (event.keyCode === 13)
+                {
+                    event.preventDefault();
+                    const target = event.currentTarget || event.target;
+                    target.blur();
+                }
             })
         })
     }
