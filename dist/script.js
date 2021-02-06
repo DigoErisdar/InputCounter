@@ -3,10 +3,12 @@ class InputCounter {
         this.counter = counter;
         const input = this.counter.querySelector('.input-counter-input');
         this.options = {
-            min: parseFloat(input.dataset.min) || null,
-            max: parseFloat(input.dataset.max) || null,
+            min:  parseFloat(input.dataset.min),
+            max: parseFloat(input.dataset.max),
             step: parseFloat(input.dataset.step) || 1,
+            round: !isNaN(parseInt(input.dataset.round)) ? parseInt(input.dataset.round) : 2,
         };
+        console.log(input, this.options);
         this.event_name = 'input_change';
         this.event = new CustomEvent(this.event_name);
         this.init();
@@ -19,7 +21,7 @@ class InputCounter {
             this.counter.insertAdjacentHTML('beforeend', this.get_action_html('plus'));
             this.setActionEvents();
             this.setInputEvent();
-            this.check_input();
+            this.calculate();
             this.counter.classList.add('init');
         }
     }
@@ -70,34 +72,39 @@ class InputCounter {
         let value = parseFloat(input.value);
         if (plus) plus.classList.remove('active');
         if (minus) minus.classList.remove('active');
-        if (value > min || min === null) minus.classList.add('active');
-        if (value < max || max === null) plus.classList.add('active');
+        if (value > min || isNaN(min)) minus.classList.add('active');
+        if (value < max || isNaN(max)) plus.classList.add('active');
     }
 
     calculate = event => {
-        event.preventDefault();
-        const target = event.currentTarget || event.target;
+        let target = this.counter;
+        let action;
+        if (event) {
+            event.preventDefault();
+            target = event.currentTarget || event.target;
+            action = event.detail;
+        }
         const input = target.querySelector('.input-counter-input');
         const max = this.options.max;
         const min = this.options.min;
         const step = this.options.step;
-        let action = event.detail;
         let value = parseFloat(input.value);
-        if (action === '+' && (max === null || value + step <= max)) {
-            input.value = value + step;
+        if (action === '+' && (isNaN(max) || value + step <= max)) {
+            value = value + step;
         }
-        if (action === '-' && (min === null || value - step >= min)) {
-            input.value = value - step;
+        if (action === '-' && (isNaN(min) || value - step >= min)) {
+            value = value - step;
         }
-
         if (!action) {
             if (max !== null && value > max) {
-                input.value = max;
+                value = max;
             }
             if (min !== null && value < min) {
-                input.value = min;
+                value = min;
             }
+            value = parseInt(value / step) * step;
         }
+        input.value = parseFloat(value.toFixed(this.options.round));
         this.check_input();
     }
 
