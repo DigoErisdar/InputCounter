@@ -5,6 +5,7 @@ class InputCounter {
         this.options = {
             min: parseFloat(input.dataset.min) || null,
             max: parseFloat(input.dataset.max) || null,
+            step: parseFloat(input.dataset.step) || 1,
         };
         this.event_name = 'input_change';
         this.event = new CustomEvent(this.event_name);
@@ -79,13 +80,14 @@ class InputCounter {
         const input = target.querySelector('.input-counter-input');
         const max = this.options.max;
         const min = this.options.min;
+        const step = this.options.step;
         let action = event.detail;
         let value = parseFloat(input.value);
-        if (action === '+' && (max === null || value + 1 <= max)) {
-            input.value = value + 1;
+        if (action === '+' && (max === null || value + step <= max)) {
+            input.value = value + step;
         }
-        if (action === '-' && (min === null || value - 1 >= min)) {
-            input.value = value - 1;
+        if (action === '-' && (min === null || value - step >= min)) {
+            input.value = value - step;
         }
 
         if (!action) {
