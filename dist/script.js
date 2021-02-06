@@ -6,7 +6,8 @@ class InputCounter {
             min: parseFloat(input.dataset.min) || 1,
             max: parseFloat(input.dataset.max) || 999,
         };
-        this.event = new CustomEvent('input_change');
+        this.event_name = 'input_change';
+        this.event = new CustomEvent(this.event_name);
         this.init();
     }
 
@@ -33,8 +34,8 @@ class InputCounter {
             item.addEventListener('click', event => {
                 const target = event.currentTarget || event.target;
                 const parent = target.closest('.input-counter');
-                let custom_event = new CustomEvent('input_change',
-                    {detail: target.classList.contains('input-counter-minus') ? '-' : '+'})
+                let custom_event = new CustomEvent(this.event_name,
+                    { detail: target.classList.contains('input-counter-minus') ? '-' : '+' })
                 if (parent) parent.dispatchEvent(custom_event);
             })
         })
