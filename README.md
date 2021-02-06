@@ -1,2 +1,1 @@
 #InputCounter
-Поле счетчик

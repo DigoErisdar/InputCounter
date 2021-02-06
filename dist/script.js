@@ -35,7 +35,7 @@ class InputCounter {
                 const target = event.currentTarget || event.target;
                 const parent = target.closest('.input-counter');
                 let custom_event = new CustomEvent(this.event_name,
-                    { detail: target.classList.contains('input-counter-minus') ? '-' : '+' })
+                    {detail: target.classList.contains('input-counter-minus') ? '-' : '+'})
                 if (parent) parent.dispatchEvent(custom_event);
             })
         })
@@ -48,6 +48,10 @@ class InputCounter {
                 const target = event.currentTarget || event.target;
                 const parent = target.closest('.input-counter');
                 parent.dispatchEvent(this.event);
+            })
+            item.addEventListener('keydown', event => {
+                console.log(event)
+                if (event.keyCode === 13) event.preventDefault();
             })
         })
     }
