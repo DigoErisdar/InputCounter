@@ -1,5 +1,35 @@
 .input-counter {
-  --border: 1px solid #DDE0E6;
+  $this: &;
+  --border: 1px solid black;
+
+  &.right, &.left {
+    #{$this}-plus, #{$this}-minus {
+      height: 50%;
+      padding: 0;
+      width: 25px;
+    }
+
+    #{$this}-plus {
+      border-bottom: none;
+    }
+  }
+
+  &.right {
+    #{$this}-input {
+      border-left: var(--border);
+    }
+  }
+
+  &.left {
+    #{$this}-input {
+      border-right: var(--border);
+    }
+  }
+
+  &-actions {
+    height: 100%;
+  }
+
   &-input {
     border: none;
     outline: none;
@@ -11,6 +41,8 @@
     padding: 5px 0;
     margin: 0;
     user-select: none;
+    height: 100%;
+
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -21,26 +53,31 @@
       -moz-appearance: textfield;
     }
   }
+
   &, &-plus, &-minus {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   &-plus, &-minus {
     border: var(--border);
-    padding: 5px 5px;
+    padding: 15px;
     cursor: pointer;
     font-weight: bold;
     user-select: none;
     color: #DDE0E6;
     pointer-events: none;
+
     &.active {
       pointer-events: all;
+
       &:hover {
         color: #333333;
       }
     }
   }
+
 
 }
 
