@@ -2,6 +2,10 @@ class InputCounter {
     constructor(counter) {
         this.counter = counter;
         const input = this.counter.querySelector('.input-counter-input');
+        this.align = input.dataset.actionAlign;
+        if (this.align) {
+            this.counter.classList.add(this.align);
+        }
         this.options = {
             min:  parseFloat(input.dataset.min),
             max: parseFloat(input.dataset.max),
@@ -17,8 +21,25 @@ class InputCounter {
     init = () => {
         if (!this.counter.classList.contains('init')) {
             this.counter.addEventListener('input_change', this.calculate);
-            this.counter.insertAdjacentHTML('afterbegin', this.get_action_html('minus'));
-            this.counter.insertAdjacentHTML('beforeend', this.get_action_html('plus'));
+            if (this.options.actions) {
+                if (this.align) {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('input-counter-actions');
+                    wrapper.insertAdjacentHTML('afterbegin', this.get_action_html('plus'));
+                    wrapper.insertAdjacentHTML('beforeend', this.get_action_html('minus'));
+                    switch (this.align) {
+                        case "right":
+                            this.counter.insertAdjacentElement('beforeend', wrapper);
+                            break;
+                        case "left":
+                            this.counter.insertAdjacentElement('afterbegin', wrapper);
+                            break;
+                    }
+                } else {
+                    this.counter.insertAdjacentHTML('afterbegin', this.get_action_html('minus'));
+                    this.counter.insertAdjacentHTML('beforeend', this.get_action_html('plus'));
+                }
+            }
             this.setActionEvents();
             this.setInputEvent();
             this.calculate();
